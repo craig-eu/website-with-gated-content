@@ -1,8 +1,9 @@
 'use client';
 
-import config from '@/tina/config';
-import { TinaAdmin } from 'tinacms';
+import dynamic from 'next/dynamic';
+
+const TinaAdmin = dynamic(() => import('./admin-client'), { ssr: false });
 
 export default function AdminPage() {
-    return <TinaAdmin config={config} />;
+    return <TinaAdmin />;
 }

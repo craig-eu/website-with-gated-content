@@ -1,21 +1,16 @@
 import { defineConfig } from "tinacms";
 
-// Your existing Tina Cloud credentials from .env.tina-cloud
+// Tina Cloud credentials (ideally from .env.local in dev, or environment variables in prod)
 const branch = process.env.TINA_BRANCH || "main";
 const clientId = process.env.NEXT_PUBLIC_TINA_CLIENT_ID;
 const token = process.env.TINA_TOKEN;
 
-// Check if we're in development mode - use local-only mode
-// This avoids schema mismatch errors with Tina Cloud during development
-const isLocalDevelopment = process.env.NODE_ENV === 'development';
 
 export default defineConfig({
     branch,
 
-    // Only use Tina Cloud in production (when schema is synced)
-    // During development, use local filesystem
-    clientId: isLocalDevelopment ? undefined : clientId,
-    token: isLocalDevelopment ? undefined : token,
+    // Tina Cloud configuration - required for admin interface
+    ...(clientId && token ? { clientId, token } : {}),
 
     build: {
         outputFolder: "admin",
