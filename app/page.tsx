@@ -1,35 +1,11 @@
 import client from '@/tina/__generated__/client';
-import { Hero, Features, CTABanner, ContentSection, UserInfo } from '@/components/blocks';
-import PageLayout from '@/components/page-layout';
-
-// Block renderer component mapping - keys match Tina's __typename format
-const components = {
-    PageBlocksHero: Hero,
-    PageBlocksFeatures: Features,
-    PageBlocksCtaBanner: CTABanner,
-    PageBlocksContent: ContentSection,
-    PageBlocksUserInfo: UserInfo,
-};
+import ClientPage from './client-page';
 
 export default async function Home() {
+    const variables = { relativePath: 'home.mdx' };
+
     // Fetch the home page content from Tina
-    const { data } = await client.queries.page({
-        relativePath: 'home.mdx',
-    });
+    const { data, query, variables: vars } = await client.queries.page(variables);
 
-    const page = data.page;
-
-    return (
-        <PageLayout>
-            <div className="flex flex-col">
-                {/* Render blocks dynamically */}
-                {page.blocks?.map((block: any, index: number) => {
-                    const Component = components[block.__typename as keyof typeof components];
-                    if (!Component) return null;
-
-                    return <Component key={index} {...block} />;
-                })}
-            </div>
-        </PageLayout>
-    );
+    return <ClientPage data={data} query={query} variables={vars} />;
 }
