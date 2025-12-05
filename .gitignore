@@ -28,5 +28,9 @@ dist-ssr
 # Environment files
 .env
 .env.local
-.env.tina-cloud
 .vercel
+
+# TinaCMS
+tina/__generated__/**
+!tina/__generated__/_graphql.json
+!tina/__generated__/_lookup.json
