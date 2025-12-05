@@ -102,7 +102,7 @@ function AuthContent() {
                         }}
                         providers={['google', 'github']}
                         magicLink={true}
-                        redirectTo={typeof window !== 'undefined' ? window.location.origin : ''}
+                        redirectTo={typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : ''}
                     />
                 </div>
             </div>
