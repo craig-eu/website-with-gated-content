@@ -1,5 +1,5 @@
 import client from '@/tina/__generated__/client';
-import { Hero, Features, CTABanner, ContentSection } from '@/components/blocks';
+import { Hero, Features, CTABanner, ContentSection, UserInfo } from '@/components/blocks';
 import PageLayout from '@/components/page-layout';
 
 // Block renderer component mapping - keys match Tina's __typename format
@@ -8,6 +8,7 @@ const components = {
     PageBlocksFeatures: Features,
     PageBlocksCtaBanner: CTABanner,
     PageBlocksContent: ContentSection,
+    PageBlocksUserInfo: UserInfo,
 };
 
 export default async function Home() {

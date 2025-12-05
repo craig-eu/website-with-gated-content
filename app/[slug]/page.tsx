@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import client from '@/tina/__generated__/client';
-import { Hero, Features, CTABanner, ContentSection } from '@/components/blocks';
+import { Hero, Features, CTABanner, ContentSection, UserInfo } from '@/components/blocks';
 import PageLayout from '@/components/page-layout';
 import { createClient } from '@/lib/supabase/server';
 
@@ -10,6 +10,7 @@ const components = {
     PageBlocksFeatures: Features,
     PageBlocksCtaBanner: CTABanner,
     PageBlocksContent: ContentSection,
+    PageBlocksUserInfo: UserInfo,
 };
 
 interface PageProps {

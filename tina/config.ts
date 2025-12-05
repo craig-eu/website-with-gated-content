@@ -254,6 +254,24 @@ export default defineConfig({
                                     },
                                 ],
                             },
+                            // User Info Block
+                            {
+                                name: "userInfo",
+                                label: "User Info Section",
+                                fields: [
+                                    {
+                                        type: "string",
+                                        name: "heading",
+                                        label: "Section Heading",
+                                        description: "e.g. 'Premium Content Unlocked'",
+                                    },
+                                    {
+                                        type: "string",
+                                        name: "subheading",
+                                        label: "Section Subheading",
+                                    },
+                                ],
+                            },
                         ],
                     },
                 ],
