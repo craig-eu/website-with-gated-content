@@ -18,9 +18,9 @@ export default defineConfig({
     },
 
     media: {
-        tina: {
-            mediaRoot: "uploads",
-            publicFolder: "public",
+        loadCustomStore: async () => {
+            const { ExternalMediaStore } = await import('./external-media-store');
+            return ExternalMediaStore;
         },
     },
 
