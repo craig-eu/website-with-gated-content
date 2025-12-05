@@ -12,10 +12,15 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
+      const forwardedProto = request.headers.get('x-forwarded-proto') || 'https'
+
+      // If returning to TinaCMS, redirect to dashboard page within TinaCMS
+      const redirectUrl = next === '/admin' ? '/admin#/~/dashboard' : next
+
       if (forwardedHost) {
-        return NextResponse.redirect(`https://${forwardedHost}${next}`)
+        return NextResponse.redirect(`${forwardedProto}://${forwardedHost}${redirectUrl}`)
       } else {
-        return NextResponse.redirect(`${origin}${next}`)
+        return NextResponse.redirect(`${origin}${redirectUrl}`)
       }
     }
   }

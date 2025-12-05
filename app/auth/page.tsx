@@ -102,7 +102,12 @@ function AuthContent() {
                         }}
                         providers={['google', 'github']}
                         magicLink={true}
-                        redirectTo={typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : ''}
+                        redirectTo={(() => {
+                            if (typeof window === 'undefined') return ''
+                            const next = searchParams?.get('next')
+                            const baseUrl = `${window.location.origin}/auth/callback`
+                            return next ? `${baseUrl}?next=${encodeURIComponent(next)}` : baseUrl
+                        })()}
                     />
                 </div>
             </div>

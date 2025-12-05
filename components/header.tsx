@@ -7,6 +7,44 @@ import { createClient } from '@/lib/supabase/client'
 import { LogOut } from 'lucide-react'
 import type { Session } from '@supabase/supabase-js'
 
+// Wrapper component that detects iframe context (TinaCMS visual editing) and navigates parent window
+// forceBreakout: set to true for auth links that need to break out of TinaCMS
+function NavLink({ href, className, children, forceBreakout = false }: {
+    href: string;
+    className?: string;
+    children: React.ReactNode;
+    forceBreakout?: boolean;
+}) {
+    const [isInIframe, setIsInIframe] = useState(false)
+
+    useEffect(() => {
+        // Check if we're inside an iframe (TinaCMS visual editing mode)
+        setIsInIframe(window.self !== window.top)
+    }, [])
+
+    const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (isInIframe && forceBreakout) {
+            // We're in TinaCMS iframe and need to break out for auth
+            e.preventDefault()
+            e.stopPropagation()
+            // Use window.top to navigate the parent window out of TinaCMS
+            // Append ?next=/admin#/~/dashboard so we return to dashboard in TinaCMS after login
+            if (window.top) {
+                const returnUrl = href.includes('?') ? `${href}&next=/admin` : `${href}?next=/admin`
+                window.top.location.href = returnUrl
+            }
+        }
+    }
+
+    if (isInIframe && forceBreakout) {
+        // Use anchor tag with onClick handler for auth links in iframe context
+        return <a href={href} className={className} onClick={handleClick}>{children}</a>
+    }
+
+    // Use Next.js Link for normal navigation (better performance)
+    return <Link href={href} className={className}>{children}</Link>
+}
+
 export default function Header() {
     const [session, setSession] = useState<Session | null>(null)
     const router = useRouter()
@@ -40,18 +78,18 @@ export default function Header() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <div className="flex-shrink-0 flex items-center">
-                        <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                        <NavLink href="/" className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
                             DemoApp
-                        </Link>
+                        </NavLink>
                     </div>
                     <nav className="flex space-x-8">
-                        <Link href="/" className="text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                        <NavLink href="/" className="text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                             Home
-                        </Link>
+                        </NavLink>
                         {session && (
-                            <Link href="/dashboard" className="text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            <NavLink href="/dashboard" className="text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                                 Dashboard
-                            </Link>
+                            </NavLink>
                         )}
                     </nav>
                     <div className="flex items-center space-x-4">
@@ -71,12 +109,12 @@ export default function Header() {
                             </div>
                         ) : (
                             <>
-                                <Link href="/auth" className="text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                                <NavLink href="/auth" className="text-slate-600 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors" forceBreakout={true}>
                                     Sign In
-                                </Link>
-                                <Link href="/auth?mode=signup" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm hover:shadow-md">
+                                </NavLink>
+                                <NavLink href="/auth?mode=signup" className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm hover:shadow-md" forceBreakout={true}>
                                     Sign Up
-                                </Link>
+                                </NavLink>
                             </>
                         )}
                     </div>
