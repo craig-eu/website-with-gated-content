@@ -66,5 +66,5 @@ export async function generateStaticParams() {
         .map((page: any) => ({
             slug: page?.node?._sys.filename,
         }))
-        .filter((page: any) => page.slug !== 'home'); // Exclude home page since it's handled by app/page.tsx
+        .filter((page: any) => page.slug !== 'home' && page.slug !== 'dashboard'); // Exclude home and dashboard pages since they are handled explicitly
 }
