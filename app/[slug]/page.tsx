@@ -14,13 +14,13 @@ const components = {
 };
 
 interface PageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export default async function DynamicPage({ params }: PageProps) {
-    const { slug } = params;
+    const { slug } = await params;
 
     // Fetch the page content from Tina
     const { data } = await client.queries.page({
