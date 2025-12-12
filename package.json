@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "tinacms dev -c \"next dev\"",
-    "build": "tinacms build && next build",
+    "build": "dotenv -e .env.local -- tinacms build && next build",
     "start": "tinacms build && next start",
     "lint": "next lint"
   },
@@ -27,6 +27,7 @@
     "@types/node": "^22.19.1",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
