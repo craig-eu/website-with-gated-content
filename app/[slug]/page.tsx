@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation';
+import { redirect, notFound } from 'next/navigation';
 import client from '@/tina/__generated__/client';
 import { Hero, Features, CTABanner, ContentSection, UserInfo } from '@/components/blocks';
 import PageLayout from '@/components/page-layout';
@@ -21,6 +21,10 @@ interface PageProps {
 
 export default async function DynamicPage({ params }: PageProps) {
     const { slug } = await params;
+
+    if (slug === 'favicon.ico') {
+        notFound();
+    }
 
     // Fetch the page content from Tina
     const { data } = await client.queries.page({
