@@ -1,16 +1,11 @@
-# React + Vite
+# Website with Gated Content
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a Next.js application integrated with TinaCMS for content management and Supabase for authentication/gating.
 
-Currently, two official plugins are available:
+## Contributing
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+For instructions on how to set up the project (including prerequisites like Visual Studio Build Tools), configure environment variables, and run it locally, please read our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+It covers workflows for:
+*   **Content Creators** (Markdown focus)
+*   **Full Stack Developers** (TypeScript & Markdown focus)
