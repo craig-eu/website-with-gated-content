@@ -10,7 +10,7 @@ import PageLayout from '@/components/page-layout'
 function AuthContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
-    const view = searchParams?.get('mode') === 'signup' ? 'sign_up' : 'sign_in'
+    const [view, setView] = useState(searchParams?.get('mode') === 'signup' ? 'sign_up' : 'sign_in')
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const supabase = createClient()
 
@@ -63,6 +63,36 @@ function AuthContent() {
         return () => subscription.unsubscribe()
     }, [router, supabase])
 
+    const getRedirectUrl = () => {
+        if (typeof window === 'undefined') return ''
+        const next = searchParams?.get('next')
+        const baseUrl = `${window.location.origin}/auth/callback`
+
+        if (view === 'forgotten_password') {
+            return `${baseUrl}?next=/update-password`
+        }
+
+        return next ? `${baseUrl}?next=${encodeURIComponent(next)}` : baseUrl
+    }
+
+    const getViewTitle = () => {
+        switch (view) {
+            case 'sign_up': return 'Create an account'
+            case 'forgotten_password': return 'Reset your password'
+            case 'magic_link': return 'Sign in with Magic Link'
+            default: return 'Welcome back'
+        }
+    }
+
+    const getViewDescription = () => {
+        switch (view) {
+            case 'sign_up': return 'Sign up to access exclusive content'
+            case 'forgotten_password': return 'Enter your email to receive a reset link'
+            case 'magic_link': return 'We\'ll send you a link to sign in'
+            default: return 'Sign in to your account'
+        }
+    }
+
     return (
         <PageLayout>
             <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
@@ -80,15 +110,15 @@ function AuthContent() {
                     )}
                     <div>
                         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-slate-900">
-                            {view === 'sign_up' ? 'Create an account' : 'Welcome back'}
+                            {getViewTitle()}
                         </h2>
                         <p className="mt-2 text-center text-sm text-slate-600">
-                            {view === 'sign_up' ? 'Sign up to access exclusive content' : 'Sign in to your account'}
+                            {getViewDescription()}
                         </p>
                     </div>
                     <Auth
                         supabaseClient={supabase as any}
-                        view={view}
+                        view={view as any}
                         appearance={{
                             theme: ThemeSupa,
                             variables: {
@@ -102,13 +132,78 @@ function AuthContent() {
                         }}
                         providers={['google', 'github']}
                         magicLink={true}
-                        redirectTo={(() => {
-                            if (typeof window === 'undefined') return ''
-                            const next = searchParams?.get('next')
-                            const baseUrl = `${window.location.origin}/auth/callback`
-                            return next ? `${baseUrl}?next=${encodeURIComponent(next)}` : baseUrl
-                        })()}
+                        showLinks={false}
+                        redirectTo={getRedirectUrl()}
                     />
+
+                    <div className="space-y-4 text-center text-sm mt-8">
+                        {view === 'sign_in' && (
+                            <div className="space-y-2">
+                                <button
+                                    onClick={() => setView('magic_link')}
+                                    className="block w-full text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                                >
+                                    Sign in with Magic Link
+                                </button>
+                                <button
+                                    onClick={() => setView('forgotten_password')}
+                                    className="block w-full text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                                >
+                                    Forgot your password?
+                                </button>
+                                <div className="text-slate-600 pt-2 border-t border-slate-100">
+                                    Don't have an account?{' '}
+                                    <button
+                                        onClick={() => setView('sign_up')}
+                                        className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                                    >
+                                        Sign up
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {view === 'magic_link' && (
+                            <div className="space-y-2">
+                                <button
+                                    onClick={() => setView('sign_in')}
+                                    className="block w-full text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                                >
+                                    Sign in with Password
+                                </button>
+                                <div className="text-slate-600 pt-2 border-t border-slate-100">
+                                    Don't have an account?{' '}
+                                    <button
+                                        onClick={() => setView('sign_up')}
+                                        className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                                    >
+                                        Sign up
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {view === 'sign_up' && (
+                            <div className="text-slate-600">
+                                Already have an account?{' '}
+                                <button
+                                    onClick={() => setView('sign_in')}
+                                    className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                                >
+                                    Sign in
+                                </button>
+                            </div>
+                        )}
+
+                        {view === 'forgotten_password' && (
+                            <button
+                                onClick={() => setView('sign_in')}
+                                className="font-medium text-indigo-600 hover:text-indigo-500 hover:underline transition-colors duration-200"
+                            >
+                                Back to sign in
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </PageLayout>
